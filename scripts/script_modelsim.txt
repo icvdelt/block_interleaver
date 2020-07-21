@@ -1,0 +1,35 @@
+vlib rtl_work
+vmap work rtl_work
+
+vcom -2008 -work work ../src/internal_blocks/generic_components/generic_types.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/generic_functions.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/generic_components.vhd
+	
+vcom -2008 -work work ../src/internal_blocks/block_interleaver_components.vhd
+
+vcom -2008 -work work ../src/internal_blocks/generic_components/adder.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/half_subtractor_unit.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/half_adder_unit.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/comparator.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/sync_ld_dff.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/up_down_counter.vhd	
+vcom -2008 -work work ../src/internal_blocks/generic_components/single_port_2D_ram.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/single_port_linear_ram.vhd	
+		
+vcom -2008 -work work ../src/internal_blocks/generic_components/decrementer.vhd
+vcom -2008 -work work ../src/internal_blocks/generic_components/incrementer.vhd
+
+vcom -2008 -work work ../src/internal_blocks/block_interleaver_components/wr_rd_status_selector.vhd		
+vcom -2008 -work work ../src/internal_blocks/block_interleaver_components/m2D_index_counter_core.vhd
+vcom -2008 -work work ../src/internal_blocks/block_interleaver_components/flag_signals_generator.vhd
+vcom -2008 -work work ../src/internal_blocks/block_interleaver_components/m2D_index_counter.vhd
+vcom -2008 -work work ../src/internal_blocks/block_interleaver_components/simplified_m2D_index_counter.vhd
+
+vcom -2008 -work work ../src/internal_blocks/interleaver_data_path.vhd
+vcom -2008 -work work ../src/internal_blocks/deinterleaver_data_path.vhd
+vcom -2008 -work work ../src/internal_blocks/interleaver_controller.vhd
+
+vcom -2008 -work work ../src/internal_blocks/rectangular_interleaver.vhd
+vcom -2008 -work work ../src/internal_blocks/rectangular_deinterleaver.vhd
+
+vcom -2008 -work work ../src/block_interleaver.vhd
