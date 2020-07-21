@@ -1,5 +1,5 @@
 # Block Interleaver
-The project contains VHDL implementation of block interleaver and deinterleaver.
+The project contains VHDL implementation of a block interleaver and deinterleaver.
 
 
 ## Block Description
