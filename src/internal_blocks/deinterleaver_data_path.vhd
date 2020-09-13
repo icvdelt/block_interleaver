@@ -14,8 +14,9 @@ use work.generic_components.incrementer;
 use work.generic_components.sync_ld_dff;
 use work.generic_components.single_port_linear_ram;
 
-use work.generic_functions.max;
+use work.generic_functions.ceil_division;
 use work.generic_functions.get_log_round;
+use work.generic_functions.max;
 
 entity deinterleaver_data_path is
 	generic (
@@ -57,7 +58,7 @@ architecture structure_ddp of deinterleaver_data_path is
 
 	constant LINE_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_LINES);
 	
-	constant COLUMN_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES);
+	constant COLUMN_ADDR_LENGTH : natural := get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES));
 	
 	constant ADDR_LENGTH : natural := max (LINE_ADDR_LENGTH, COLUMN_ADDR_LENGTH);
 
@@ -145,8 +146,7 @@ architecture structure_ddp of deinterleaver_data_path is
 		
 		FSG1 : flag_signals_generator
 			generic map (
-				NUMBER_OF_ELEMENTS => NUMBER_OF_ELEMENTS,
-				WORD_LENGTH => RAM_ADDR_LENGTH)
+				NUMBER_OF_ELEMENTS => NUMBER_OF_ELEMENTS)
 		
 			port map (
 				rst => rst,							

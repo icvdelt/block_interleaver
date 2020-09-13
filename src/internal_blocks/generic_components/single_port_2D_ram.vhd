@@ -4,6 +4,10 @@ use IEEE.MATH_REAL.ceil;
 use IEEE.MATH_REAL.log2;
 use IEEE.NUMERIC_STD.all;
 
+library work;
+use work.GENERIC_FUNCTIONS.ceil_division;
+use work.GENERIC_FUNCTIONS.get_log_round;
+
 entity single_port_2D_ram is
 	generic (
 		NUMBER_OF_ELEMENTS : natural;
@@ -14,19 +18,19 @@ entity single_port_2D_ram is
 		clk : in std_logic;
 		i_ram_data : in std_logic_vector(WORD_LENGTH-1 downto 0);
 		i_ram_wr_en : in std_logic;
-		i_lin_addr : in std_logic_vector(integer(ceil(log2(real(NUMBER_OF_LINES))))-1 downto 0);
-		i_col_addr : in std_logic_vector(integer(ceil(log2(real(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES))))-1 downto 0);
+		i_lin_addr : in std_logic_vector(get_log_round(NUMBER_OF_LINES)-1 downto 0);
+		i_col_addr : in std_logic_vector(get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES))-1 downto 0);
 		o_ram_data : out std_logic_vector(WORD_LENGTH-1 downto 0)
 	);
 end single_port_2D_ram;
 
 architecture behavioral of single_port_2D_ram is
 
-	constant LINE_ADDR_LENGTH : natural := integer(ceil(log2(real(NUMBER_OF_LINES))));
+	constant LINE_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_LINES);
 	
-	constant COLUMN_ADDR_LENGTH : natural := integer(ceil(log2(real(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES))));
+	constant COLUMN_ADDR_LENGTH : natural := get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES));
 	
-	type col_array is array (((NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0) of std_logic_vector ((WORD_LENGTH - 1) downto 0);
+	type col_array is array ((ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES) - 1) downto 0) of std_logic_vector ((WORD_LENGTH - 1) downto 0);
 	type row_array is array ((NUMBER_OF_LINES - 1) downto 0) of col_array;
 	signal memory : row_array;
 	

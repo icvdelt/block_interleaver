@@ -6,8 +6,9 @@ library work;
 use work.generic_components.comparator;
 use work.block_interleaver_components.m2D_index_counter_core;
 
-use work.generic_functions.max;
+use work.generic_functions.ceil_division;
 use work.generic_functions.get_log_round;
+use work.generic_functions.max;
 
 entity m2D_index_counter is 
 	generic (
@@ -18,10 +19,10 @@ entity m2D_index_counter is
 		clk : in std_logic;														-- system clock
 		rst : in std_logic; 													-- system reset	
 		i_wr_rd_status : in std_logic;												-- defines the current status of the interleaver: 0 to write and 1 to read
-		i_max_col : in std_logic_vector	((get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0);	-- carries the maximum value for the column counter
+		i_max_col : in std_logic_vector	((get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES)) - 1) downto 0);	-- carries the maximum value for the column counter
 		i_en : in std_logic; 													-- enables the load of the line counter and column counter registers
 		o_lin_counter : out std_logic_vector ((get_log_round(NUMBER_OF_LINES) - 1) downto 0);				-- line counter
-		o_column_counter : out std_logic_vector((get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0) 	-- column counter
+		o_column_counter : out std_logic_vector((get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES)) - 1) downto 0) 	-- column counter
 		);
 			
 end m2D_index_counter;
@@ -29,7 +30,7 @@ end m2D_index_counter;
 architecture dataflow of m2D_index_counter is
 
 	constant LINE_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_LINES);
-	constant COLUMN_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES);
+	constant COLUMN_ADDR_LENGTH : natural := get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES));
 	constant ADDR_LENGTH : natural := max (LINE_ADDR_LENGTH, COLUMN_ADDR_LENGTH);
 	
 	signal w_i_clear_line : std_logic;	-- shows that line counter must be reseted next indexing

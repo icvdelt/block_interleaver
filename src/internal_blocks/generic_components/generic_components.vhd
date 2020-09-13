@@ -6,6 +6,7 @@ use IEEE.NUMERIC_STD.all;
 
 library work;
 use work.GENERIC_TYPES.all;
+use work.GENERIC_FUNCTIONS.ceil_division;
 use work.GENERIC_FUNCTIONS.get_log_round;
 use work.GENERIC_FUNCTIONS.max;
 
@@ -417,8 +418,8 @@ end component;
 			clk : in std_logic;
 			i_ram_data : in std_logic_vector(WORD_LENGTH-1 downto 0);
 			i_ram_wr_en : in std_logic;
-			i_lin_addr : in std_logic_vector(integer(ceil(log2(real(NUMBER_OF_LINES))))-1 downto 0);
-			i_col_addr : in std_logic_vector(integer(ceil(log2(real(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES))))-1 downto 0);
+			i_lin_addr : in std_logic_vector(get_log_round(NUMBER_OF_LINES)-1 downto 0);
+			i_col_addr : in std_logic_vector(get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES))-1 downto 0);
 			o_ram_data : out std_logic_vector(WORD_LENGTH-1 downto 0));
 	end component;
 	
@@ -442,7 +443,7 @@ end component;
 			clk : in std_logic;
 			i_ram_data : in std_logic_vector(WORD_LENGTH-1 downto 0);
 			i_ram_wr_en : in std_logic;
-			i_ram_addr : in std_logic_vector(integer(ceil(log2(real(NUMBER_OF_ELEMENTS))))-1 downto 0);
+			i_ram_addr : in std_logic_vector(get_log_round(NUMBER_OF_ELEMENTS)-1 downto 0);
 			o_ram_data : out std_logic_vector(WORD_LENGTH-1 downto 0)
 		);
 	end component;

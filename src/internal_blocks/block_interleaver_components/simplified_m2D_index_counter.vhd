@@ -8,9 +8,9 @@ use work.block_interleaver_components.m2D_index_counter_core;
 
 use work.generic_components.comparator;
 
-use work.generic_functions.max;
-
+use work.generic_functions.ceil_division;
 use work.generic_functions.get_log_round;
+use work.generic_functions.max;
 
 entity simplified_m2D_index_counter is 
 	generic (
@@ -33,7 +33,7 @@ entity simplified_m2D_index_counter is
 
 			o_lin_counter : out std_logic_vector ((get_log_round(NUMBER_OF_LINES) - 1) downto 0);		-- line counter
 
-			o_column_counter : out std_logic_vector((get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0) 	-- column counter
+			o_column_counter : out std_logic_vector((get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES)) - 1) downto 0) 	-- column counter
 			
 			);
 			
@@ -43,7 +43,7 @@ architecture dataflow of simplified_m2D_index_counter is
 
 	constant LINE_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_LINES);
 	
-	constant COLUMN_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES);
+	constant COLUMN_ADDR_LENGTH : natural := get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES));
 	
 	constant ADDR_LENGTH : natural := max (LINE_ADDR_LENGTH, COLUMN_ADDR_LENGTH);
 

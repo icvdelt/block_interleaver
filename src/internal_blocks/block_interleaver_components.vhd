@@ -1,6 +1,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
+library work;
+use work.generic_functions.ceil_division;
 use work.generic_functions.get_log_round;
 
 package BLOCK_INTERLEAVER_COMPONENTS is
@@ -82,10 +84,10 @@ component m2D_index_counter is
 		clk : in std_logic;								
 		rst : in std_logic; 				
 		i_wr_rd_status : in std_logic;
-		i_max_col : in std_logic_vector	((get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0);
+		i_max_col : in std_logic_vector	((get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES)) - 1) downto 0);
 		i_en : in std_logic; 							
 		o_lin_counter : out std_logic_vector ((get_log_round(NUMBER_OF_LINES) - 1) downto 0);		
-		o_column_counter : out std_logic_vector((get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0) 	
+		o_column_counter : out std_logic_vector((get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES)) - 1) downto 0) 	
 	);
 end component;	
 
@@ -118,8 +120,7 @@ end component;
 
 component flag_signals_generator is
 	generic (
-		NUMBER_OF_ELEMENTS : natural;
-		WORD_LENGTH : natural);
+		NUMBER_OF_ELEMENTS : natural);
 		
 	port (
 		rst : in std_logic;							
@@ -133,7 +134,7 @@ component flag_signals_generator is
 		o_first_out : out std_logic;			--Represents that the first output has been sent.
 		o_last_out : out std_logic;			--Represents that the last output has been sent.
 	
-		o_counter : out std_logic_vector (WORD_LENGTH - 1 downto 0));	
+		o_counter : out std_logic_vector (get_log_round(NUMBER_OF_ELEMENTS+1) - 1 downto 0));	
 end component;
 
 component simplified_m2D_index_counter is 
@@ -147,14 +148,14 @@ component simplified_m2D_index_counter is
 		i_en : in std_logic;
 		o_end_cycle : out std_logic;
 		o_lin_counter : out std_logic_vector ((get_log_round(NUMBER_OF_LINES) - 1) downto 0);		
-		o_column_counter : out std_logic_vector((get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES) - 1) downto 0) 	
+		o_column_counter : out std_logic_vector((get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES)) - 1) downto 0) 	
 	);
 end component;	
 
 component deinterleaver_data_path is
 	generic (
 		NUMBER_OF_ELEMENTS : natural;
-   	NUMBER_OF_LINES : natural range 1 to 16;
+   	NUMBER_OF_LINES : natural;
 		WORD_LENGTH : natural);
 	port (
 		rst : in std_logic;								
