@@ -6,9 +6,9 @@ use work.BLOCK_INTERLEAVER_COMPONENTS.rectangular_deinterleaver;
 
 entity block_interleaver is
     generic (
-        NUMBER_OF_ELEMENTS : natural := 12;
-        NUMBER_OF_LINES : natural := 3;
-        WORD_LENGTH : natural := 3;
+        NUMBER_OF_ELEMENTS : natural := 5;
+        NUMBER_OF_LINES : natural := 2;
+        WORD_LENGTH : natural := 4;
 		MODE : boolean := false -- INTERLEAVER=false and DEINTERLEAVER=true
     );
     port (

@@ -13,8 +13,9 @@ use work.generic_components.sync_ld_dff;
 use work.generic_components.single_port_2D_ram;
 
 
-use work.generic_functions.max;
+use work.generic_functions.ceil_division;
 use work.generic_functions.get_log_round;
+use work.generic_functions.max;
 
 entity interleaver_data_path is
 	generic (
@@ -43,7 +44,7 @@ architecture structure_idp of interleaver_data_path is
 	--c_.. para constantes.
 	
 	constant LINE_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_LINES);
-	constant COLUMN_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_ELEMENTS/NUMBER_OF_LINES);
+	constant COLUMN_ADDR_LENGTH : natural := get_log_round(ceil_division(NUMBER_OF_ELEMENTS,NUMBER_OF_LINES));
 	constant ADDR_LENGTH : natural := max (LINE_ADDR_LENGTH, COLUMN_ADDR_LENGTH);
 	constant RAM_ADDR_LENGTH : natural := get_log_round(NUMBER_OF_ELEMENTS);
 	
@@ -84,8 +85,7 @@ architecture structure_idp of interleaver_data_path is
 		
 		FSG0 : flag_signals_generator		--  sets o_full_ram, o_first_out and o_last_out when needed
 			generic map (
-				NUMBER_OF_ELEMENTS => NUMBER_OF_ELEMENTS,
-				WORD_LENGTH => RAM_ADDR_LENGTH)
+				NUMBER_OF_ELEMENTS => NUMBER_OF_ELEMENTS)
 			port map (
 				rst => rst,							
 				clk => clk,

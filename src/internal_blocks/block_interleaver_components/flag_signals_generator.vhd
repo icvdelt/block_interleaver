@@ -13,8 +13,7 @@ use work.generic_functions.get_log_round;
 
 entity flag_signals_generator is
 	generic (
-		NUMBER_OF_ELEMENTS : natural;
-		WORD_LENGTH : natural);
+		NUMBER_OF_ELEMENTS : natural);
 		
 	port (
 		rst : in std_logic;							
@@ -28,40 +27,42 @@ entity flag_signals_generator is
 		o_first_out : out std_logic;			--Represents that the first output has been sent.
 		o_last_out : out std_logic;			--Represents that the last output has been sent.
 	
-		o_counter : out std_logic_vector (WORD_LENGTH - 1 downto 0));
+		o_counter : out std_logic_vector (get_log_round(NUMBER_OF_ELEMENTS+1) - 1 downto 0));
 end flag_signals_generator;
 
 architecture structure_fsg1 of flag_signals_generator is
 
-	signal r_element_counter : std_logic_vector (get_log_round(NUMBER_OF_ELEMENTS) - 1 downto 0); --Shows the number of symbols in the ram plus 1.
-	signal r_ram_max : std_logic_vector (WORD_LENGTH - 1 downto 0);		--Indicates the maximum number of elements written in the ram minus 1 during one cycle
+   constant RAM_ADDR_LENGTH_1 : natural := get_log_round(NUMBER_OF_ELEMENTS+1);
+
+	signal r_element_counter : std_logic_vector (RAM_ADDR_LENGTH_1 - 1 downto 0); --Shows the number of symbols in the ram plus 1.
+	signal r_ram_max : std_logic_vector (RAM_ADDR_LENGTH_1 - 1 downto 0);		--Indicates the maximum number of elements written in the ram minus 1 during one cycle
 	
 	begin
 		
 		COMP4 : comparator
-			generic map(WORD_LENGTH => WORD_LENGTH)
+			generic map(WORD_LENGTH => RAM_ADDR_LENGTH_1)
 			port map(i_r => r_ram_max,
 						i => r_element_counter,
 						lt => open,
 						eq => o_first_out);
 						
 		COMP5 : comparator										--Checks if the ram has reachead its maximum capacity.
-			generic map(WORD_LENGTH => WORD_LENGTH)
-			port map(i_r => (std_logic_vector (to_unsigned ((NUMBER_OF_ELEMENTS), WORD_LENGTH))),
+			generic map(WORD_LENGTH => RAM_ADDR_LENGTH_1)
+			port map(i_r => (std_logic_vector (to_unsigned ((NUMBER_OF_ELEMENTS), RAM_ADDR_LENGTH_1))),
 						i => r_element_counter,
 						lt => open,
 						eq => o_full_ram);
 						
 		COMP6 : comparator
-			generic map(WORD_LENGTH => WORD_LENGTH)	--Checks if the last data package is about to be sent.
-			port map(i_r => (std_logic_vector (to_unsigned (1, WORD_LENGTH))),
+			generic map(WORD_LENGTH => RAM_ADDR_LENGTH_1)	--Checks if the last data package is about to be sent.
+			port map(i_r => (std_logic_vector (to_unsigned (1, RAM_ADDR_LENGTH_1))),
 						i => r_element_counter,
 						lt => open,
 						eq => o_last_out);	
 	
 		REG6 : sync_ld_dff	--Holds the maximum number of elements written in the ram minus 1 during one cycle.
 			generic map (
-				WORD_LENGTH => WORD_LENGTH)
+				WORD_LENGTH => RAM_ADDR_LENGTH_1)
 			port map (
 				rst => rst,
 				clk => clk,
@@ -70,7 +71,7 @@ architecture structure_fsg1 of flag_signals_generator is
 				o_data => r_ram_max);
 				
 		UDC0 : up_down_counter		--Counts the data flux in the ram.
-			generic map(WORD_LENGTH => WORD_LENGTH)
+			generic map(WORD_LENGTH => RAM_ADDR_LENGTH_1)
 			port map ( clk => clk,
 						  rst => rst,
 						  i_dir => i_wr_rd_status,
